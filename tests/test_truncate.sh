@@ -1,12 +1,13 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 SMALLSIZE=32
 MEDIUMSIZE=2048
 LARGESIZE=8192
 
 echo "=== Truncate tests ==="
-rm -rf blocks
+rm -rf blocks-test_truncate
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 TEST
@@ -130,4 +131,4 @@ truncate_test \
     "2*$LARGESIZE, 2*$LARGESIZE, 2*$LARGESIZE, 2*$LARGESIZE, 2*$LARGESIZE"
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_truncate

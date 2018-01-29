@@ -1,15 +1,12 @@
-TARGET = lfs
-
 CC = gcc
 AR = ar
 SIZE = size
 
-SRC += $(wildcard *.c emubd/*.c)
+TESTS := $(patsubst tests/%.sh,%,$(wildcard tests/test_*))
+SRC += $(filter-out test_%.c,$(wildcard *.c emubd/*.c))
 OBJ := $(SRC:.c=.o)
-DEP := $(SRC:.c=.d)
+DEP := $(SRC:.c=.d) $(addsuffix .d,$(TESTS))
 ASM := $(SRC:.c=.s)
-
-TEST := $(patsubst tests/%.sh,%,$(wildcard tests/test_*))
 
 SHELL = /bin/bash -o pipefail
 
@@ -24,8 +21,7 @@ endif
 override CFLAGS += -I.
 override CFLAGS += -std=c99 -Wall -pedantic
 
-
-all: $(TARGET)
+all: $(OBJ)
 
 asm: $(ASM)
 
@@ -33,9 +29,9 @@ size: $(OBJ)
 	$(SIZE) -t $^
 
 .SUFFIXES:
-test: test_format test_dirs test_files test_seek test_truncate test_parallel \
-	test_alloc test_paths test_orphan test_move test_corrupt
-test_%: tests/test_%.sh
+test: $(TESTS)
+$(TESTS): $(OBJ)
+test_%: tests/test_%.sh FORCE
 ifdef QUIET
 	./$< | sed -n '/^[-=]/p'
 else
@@ -44,8 +40,14 @@ endif
 
 -include $(DEP)
 
-$(TARGET): $(OBJ)
+ifneq ($(filter $(TESTS),$(MAKECMDGOALS)),)
+$(TESTS): test_%: test_%.o
+$(TESTS):
 	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
+else
+%: %.o $(OBJ)
+	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
+endif
 
 %.a: $(OBJ)
 	$(AR) rcs $@ $^
@@ -56,8 +58,11 @@ $(TARGET): $(OBJ)
 %.s: %.c
 	$(CC) -S $(CFLAGS) $< -o $@
 
-clean:
-	rm -f $(TARGET)
-	rm -f $(OBJ)
-	rm -f $(DEP)
-	rm -f $(ASM)
+clean: FORCE
+	rm -f $(TESTS) $(addsuffix .c,$(TESTS))
+	rm -f $(OBJ) $(addsuffix .o,$(TESTS))
+	rm -f $(DEP) $(addsuffix .d,$(TESTS))
+	rm -f $(ASM) $(addsuffix .s,$(TESTS))
+
+FORCE:
+

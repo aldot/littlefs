@@ -5,6 +5,17 @@ import sys
 import subprocess
 import os
 
+source_file = os.environ.get('CFILE')
+testname = None
+
+if source_file is not None:
+    source_file = os.path.splitext(source_file)[0]
+    testname = os.path.basename(source_file)
+    source_file += '.c'
+else:
+    source_file = 'test.c'
+    testname = 'lfs'
+
 def generate(test):
     with open("tests/template.fmt") as file:
         template = file.read()
@@ -21,22 +32,14 @@ def generate(test):
         else:
             lines.append(line)
 
-    # Create test file
-    with open('test.c', 'w') as file:
-        file.write(template.format(tests='\n'.join(lines)))
-
-    # Remove build artifacts to force rebuild
-    try:
-        os.remove('test.o')
-        os.remove('lfs')
-    except OSError:
-        pass
+    with open(source_file, 'w') as file:
+        file.write(template.format(tests='\n'.join(lines), testname=testname))
 
 def compile():
-    subprocess.check_call(['make', '--no-print-directory', '-s'])
+    subprocess.check_call(['make', '--no-print-directory', '-s', testname])
 
 def execute():
-    subprocess.check_call(["./lfs"])
+    subprocess.check_call([os.path.join('.', testname)])
 
 def main(test=None):
     if test and not test.startswith('-'):

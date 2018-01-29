@@ -1,10 +1,11 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 LARGESIZE=128
 
 echo "=== Directory tests ==="
-rm -rf blocks
+rm -rf blocks-test_dirs
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 TEST
@@ -356,4 +357,4 @@ tests/test.py << TEST
 TEST
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_dirs

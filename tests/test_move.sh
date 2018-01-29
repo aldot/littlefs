@@ -1,8 +1,9 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 echo "=== Move tests ==="
-rm -rf blocks
+rm -rf blocks-test_move
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 
@@ -59,7 +60,7 @@ tests/test.py << TEST
     lfs_rename(&lfs, "b/hello", "c/hello") => 0;
     lfs_unmount(&lfs) => 0;
 TEST
-rm -v blocks/7
+rm -v blocks-test_move/7
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_dir_open(&lfs, &dir[0], "b") => 0;
@@ -86,8 +87,8 @@ tests/test.py << TEST
     lfs_rename(&lfs, "c/hello", "d/hello") => 0;
     lfs_unmount(&lfs) => 0;
 TEST
-rm -v blocks/8
-rm -v blocks/a
+rm -v blocks-test_move/8
+rm -v blocks-test_move/a
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_dir_open(&lfs, &dir[0], "c") => 0;
@@ -140,7 +141,7 @@ tests/test.py << TEST
     lfs_rename(&lfs, "b/hi", "c/hi") => 0;
     lfs_unmount(&lfs) => 0;
 TEST
-rm -v blocks/7
+rm -v blocks-test_move/7
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_dir_open(&lfs, &dir[0], "b") => 0;
@@ -169,8 +170,8 @@ tests/test.py << TEST
     lfs_rename(&lfs, "c/hi", "d/hi") => 0;
     lfs_unmount(&lfs) => 0;
 TEST
-rm -v blocks/9
-rm -v blocks/a
+rm -v blocks-test_move/9
+rm -v blocks-test_move/a
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_dir_open(&lfs, &dir[0], "c") => 0;
@@ -233,4 +234,4 @@ TEST
 
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_move

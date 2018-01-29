@@ -97,7 +97,7 @@ const struct lfs_config cfg = {{
 
 // Entry point
 int main() {{
-    lfs_emubd_create(&cfg, "blocks");
+    lfs_emubd_create(&cfg, "blocks-{testname}");
 
 {tests}
 

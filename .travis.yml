@@ -3,13 +3,14 @@ env:
 
 script:
     # make sure example can at least compile
-    - sed -n '/``` c/,/```/{/```/d; p;}' README.md > test.c &&
-      make all size CFLAGS+="
+    - sed -n '/``` c/,/```/{/```/d; p;}' README.md > example.c &&
+      make example size CFLAGS+="
         -Duser_provided_block_device_read=NULL
         -Duser_provided_block_device_prog=NULL
         -Duser_provided_block_device_erase=NULL
         -Duser_provided_block_device_sync=NULL
         -include stdio.h"
+    - rm -f example example.o example.c
 
     # run tests
     - make test QUIET=1

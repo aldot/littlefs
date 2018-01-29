@@ -1,12 +1,13 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 SMALLSIZE=4
 MEDIUMSIZE=128
 LARGESIZE=132
 
 echo "=== Seek tests ==="
-rm -rf blocks
+rm -rf blocks-test_seek
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
     lfs_mount(&lfs, &cfg) => 0;
@@ -358,4 +359,4 @@ tests/test.py << TEST
 TEST
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_seek

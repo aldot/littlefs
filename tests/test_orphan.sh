@@ -1,8 +1,9 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 echo "=== Orphan tests ==="
-rm -rf blocks
+rm -rf blocks-test_orphan
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 TEST
@@ -17,7 +18,7 @@ tests/test.py << TEST
 TEST
 # remove most recent file, this should be the update to the previous
 # linked-list entry and should orphan the child
-rm -v blocks/8
+rm -v blocks-test_orphan/8
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_stat(&lfs, "parent/orphan", &info) => LFS_ERR_NOENT;
@@ -38,4 +39,4 @@ tests/test.py << TEST
 TEST
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_orphan

@@ -1,12 +1,13 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 SMALLSIZE=32
 MEDIUMSIZE=8192
 LARGESIZE=262144
 
 echo "=== File tests ==="
-rm -rf blocks
+rm -rf blocks-test_files
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 TEST
@@ -136,4 +137,4 @@ tests/test.py << TEST
 TEST
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_files

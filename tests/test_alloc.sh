@@ -1,8 +1,9 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 echo "=== Allocator tests ==="
-rm -rf blocks
+rm -rf blocks-test_alloc
 tests/test.py << TEST
     lfs_format(&lfs, &cfg) => 0;
 TEST
@@ -268,4 +269,4 @@ TEST
 
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_alloc

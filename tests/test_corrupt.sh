@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eu
+export CFILE=$(basename $0 .sh).c
 
 echo "=== Corrupt tests ==="
 
@@ -68,16 +69,16 @@ TEST
 }
 
 echo "--- Sanity check ---"
-rm -rf blocks
+rm -rf blocks-test_corrupt
 lfs_mktree
 lfs_chktree
 
 echo "--- Block corruption ---"
 for i in {0..33}
 do 
-    rm -rf blocks
-    mkdir blocks
-    ln -s /dev/zero blocks/$(printf '%x' $i)
+    rm -rf blocks-test_corrupt
+    mkdir blocks-test_corrupt
+    ln -s /dev/zero blocks-test_corrupt/$(printf '%x' $i)
     lfs_mktree
     lfs_chktree
 done
@@ -85,33 +86,33 @@ done
 echo "--- Block persistance ---"
 for i in {0..33}
 do 
-    rm -rf blocks
-    mkdir blocks
+    rm -rf blocks-test_corrupt
+    mkdir blocks-test_corrupt
     lfs_mktree
-    chmod a-w blocks/$(printf '%x' $i)
+    chmod a-w blocks-test_corrupt/$(printf '%x' $i)
     lfs_mktree
     lfs_chktree
 done
 
 echo "--- Big region corruption ---"
-rm -rf blocks
-mkdir blocks
+rm -rf blocks-test_corrupt
+mkdir blocks-test_corrupt
 for i in {2..255}
 do
-    ln -s /dev/zero blocks/$(printf '%x' $i)
+    ln -s /dev/zero blocks-test_corrupt/$(printf '%x' $i)
 done
 lfs_mktree
 lfs_chktree
 
 echo "--- Alternating corruption ---"
-rm -rf blocks
-mkdir blocks
+rm -rf blocks-test_corrupt
+mkdir blocks-test_corrupt
 for i in {2..511..2}
 do
-    ln -s /dev/zero blocks/$(printf '%x' $i)
+    ln -s /dev/zero blocks-test_corrupt/$(printf '%x' $i)
 done
 lfs_mktree
 lfs_chktree
 
 echo "--- Results ---"
-tests/stats.py
+tests/stats.py blocks-test_corrupt
