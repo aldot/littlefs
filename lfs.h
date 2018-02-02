@@ -288,7 +288,7 @@ typedef struct lfs {
 // object, and does not leave the filesystem mounted.
 //
 // Returns a negative error code on failure.
-int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+int lfs_format(lfs_t *lfs, const struct lfs_config *config) __wur;
 
 // Mounts a littlefs
 //
@@ -297,13 +297,13 @@ int lfs_format(lfs_t *lfs, const struct lfs_config *config);
 // lfs and config must be allocated while mounted.
 //
 // Returns a negative error code on failure.
-int lfs_mount(lfs_t *lfs, const struct lfs_config *config);
+int lfs_mount(lfs_t *lfs, const struct lfs_config *config) __wur;
 
 // Unmounts a littlefs
 //
 // Does nothing besides releasing any allocated resources.
 // Returns a negative error code on failure.
-int lfs_unmount(lfs_t *lfs);
+int lfs_unmount(lfs_t *lfs) __wur;
 
 /// General operations ///
 
@@ -311,7 +311,7 @@ int lfs_unmount(lfs_t *lfs);
 //
 // If removing a directory, the directory must be empty.
 // Returns a negative error code on failure.
-int lfs_remove(lfs_t *lfs, const char *path);
+int lfs_remove(lfs_t *lfs, const char *path) __wur;
 
 // Rename or move a file or directory
 //
@@ -323,13 +323,13 @@ int lfs_remove(lfs_t *lfs, const char *path);
 // next mount.
 //
 // Returns a negative error code on failure.
-int lfs_rename(lfs_t *lfs, const char *oldpath, const char *newpath);
+int lfs_rename(lfs_t *lfs, const char *oldpath, const char *newpath) __wur;
 
 // Find info about a file or directory
 //
 // Fills out the info structure, based on the specified file or directory.
 // Returns a negative error code on failure.
-int lfs_stat(lfs_t *lfs, const char *path, struct lfs_info *info);
+int lfs_stat(lfs_t *lfs, const char *path, struct lfs_info *info) __wur;
 
 
 /// File operations ///
@@ -342,7 +342,7 @@ int lfs_stat(lfs_t *lfs, const char *path, struct lfs_info *info);
 //
 // Returns a negative error code on failure.
 int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
-        const char *path, int flags);
+        const char *path, int flags) __wur;
 
 // Close a file
 //
@@ -350,20 +350,20 @@ int lfs_file_open(lfs_t *lfs, lfs_file_t *file,
 // sync had been called and releases any allocated resources.
 //
 // Returns a negative error code on failure.
-int lfs_file_close(lfs_t *lfs, lfs_file_t *file);
+int lfs_file_close(lfs_t *lfs, lfs_file_t *file) __wur;
 
 // Synchronize a file on storage
 //
 // Any pending writes are written out to storage.
 // Returns a negative error code on failure.
-int lfs_file_sync(lfs_t *lfs, lfs_file_t *file);
+int lfs_file_sync(lfs_t *lfs, lfs_file_t *file) __wur;
 
 // Read data from file
 //
 // Takes a buffer and size indicating where to store the read data.
 // Returns the number of bytes read, or a negative error code on failure.
 lfs_ssize_t lfs_file_read(lfs_t *lfs, lfs_file_t *file,
-        void *buffer, lfs_size_t size);
+        void *buffer, lfs_size_t size) __wur;
 
 // Write data to file
 //
@@ -372,37 +372,37 @@ lfs_ssize_t lfs_file_read(lfs_t *lfs, lfs_file_t *file,
 //
 // Returns the number of bytes written, or a negative error code on failure.
 lfs_ssize_t lfs_file_write(lfs_t *lfs, lfs_file_t *file,
-        const void *buffer, lfs_size_t size);
+        const void *buffer, lfs_size_t size) __wur;
 
 // Change the position of the file
 //
 // The change in position is determined by the offset and whence flag.
 // Returns the old position of the file, or a negative error code on failure.
 lfs_soff_t lfs_file_seek(lfs_t *lfs, lfs_file_t *file,
-        lfs_soff_t off, int whence);
+        lfs_soff_t off, int whence) __wur;
 
 // Truncates the size of the file to the specified size
 //
 // Returns a negative error code on failure.
-int lfs_file_truncate(lfs_t *lfs, lfs_file_t *file, lfs_off_t size);
+int lfs_file_truncate(lfs_t *lfs, lfs_file_t *file, lfs_off_t size) __wur;
 
 // Return the position of the file
 //
 // Equivalent to lfs_file_seek(lfs, file, 0, LFS_SEEK_CUR)
 // Returns the position of the file, or a negative error code on failure.
-lfs_soff_t lfs_file_tell(lfs_t *lfs, lfs_file_t *file);
+lfs_soff_t lfs_file_tell(lfs_t *lfs, lfs_file_t *file) __wur;
 
 // Change the position of the file to the beginning of the file
 //
 // Equivalent to lfs_file_seek(lfs, file, 0, LFS_SEEK_CUR)
 // Returns a negative error code on failure.
-int lfs_file_rewind(lfs_t *lfs, lfs_file_t *file);
+int lfs_file_rewind(lfs_t *lfs, lfs_file_t *file) __wur;
 
 // Return the size of the file
 //
 // Similar to lfs_file_seek(lfs, file, 0, LFS_SEEK_END)
 // Returns the size of the file, or a negative error code on failure.
-lfs_soff_t lfs_file_size(lfs_t *lfs, lfs_file_t *file);
+lfs_soff_t lfs_file_size(lfs_t *lfs, lfs_file_t *file) __wur;
 
 
 /// Directory operations ///
@@ -410,25 +410,25 @@ lfs_soff_t lfs_file_size(lfs_t *lfs, lfs_file_t *file);
 // Create a directory
 //
 // Returns a negative error code on failure.
-int lfs_mkdir(lfs_t *lfs, const char *path);
+int lfs_mkdir(lfs_t *lfs, const char *path) __wur;
 
 // Open a directory
 //
 // Once open a directory can be used with read to iterate over files.
 // Returns a negative error code on failure.
-int lfs_dir_open(lfs_t *lfs, lfs_dir_t *dir, const char *path);
+int lfs_dir_open(lfs_t *lfs, lfs_dir_t *dir, const char *path) __wur;
 
 // Close a directory
 //
 // Releases any allocated resources.
 // Returns a negative error code on failure.
-int lfs_dir_close(lfs_t *lfs, lfs_dir_t *dir);
+int lfs_dir_close(lfs_t *lfs, lfs_dir_t *dir) __wur;
 
 // Read an entry in the directory
 //
 // Fills out the info structure, based on the specified file or directory.
 // Returns a negative error code on failure.
-int lfs_dir_read(lfs_t *lfs, lfs_dir_t *dir, struct lfs_info *info);
+int lfs_dir_read(lfs_t *lfs, lfs_dir_t *dir, struct lfs_info *info) __wur;
 
 // Change the position of the directory
 //
@@ -436,7 +436,7 @@ int lfs_dir_read(lfs_t *lfs, lfs_dir_t *dir, struct lfs_info *info);
 // an absolute offset in the directory seek.
 //
 // Returns a negative error code on failure.
-int lfs_dir_seek(lfs_t *lfs, lfs_dir_t *dir, lfs_off_t off);
+int lfs_dir_seek(lfs_t *lfs, lfs_dir_t *dir, lfs_off_t off) __wur;
 
 // Return the position of the directory
 //
@@ -444,12 +444,12 @@ int lfs_dir_seek(lfs_t *lfs, lfs_dir_t *dir, lfs_off_t off);
 // sense, but does indicate the current position in the directory iteration.
 //
 // Returns the position of the directory, or a negative error code on failure.
-lfs_soff_t lfs_dir_tell(lfs_t *lfs, lfs_dir_t *dir);
+lfs_soff_t lfs_dir_tell(lfs_t *lfs, lfs_dir_t *dir) __wur;
 
 // Change the position of the directory to the beginning of the directory
 //
 // Returns a negative error code on failure.
-int lfs_dir_rewind(lfs_t *lfs, lfs_dir_t *dir);
+int lfs_dir_rewind(lfs_t *lfs, lfs_dir_t *dir) __wur;
 
 
 /// Miscellaneous littlefs specific operations ///
@@ -461,7 +461,7 @@ int lfs_dir_rewind(lfs_t *lfs, lfs_dir_t *dir);
 // blocks are in use or how much of the storage is available.
 //
 // Returns a negative error code on failure.
-int lfs_traverse(lfs_t *lfs, int (*cb)(void*, lfs_block_t), void *data);
+int lfs_traverse(lfs_t *lfs, int (*cb)(void*, lfs_block_t), void *data) __wur;
 
 // Prunes any recoverable errors that may have occured in the filesystem
 //
@@ -470,7 +470,7 @@ int lfs_traverse(lfs_t *lfs, int (*cb)(void*, lfs_block_t), void *data);
 // allocation.
 //
 // Returns a negative error code on failure.
-int lfs_deorphan(lfs_t *lfs);
+int lfs_deorphan(lfs_t *lfs) __wur;
 
 
 #endif

@@ -22,6 +22,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#ifndef __wur
+# define __wur /* nothing */
+#endif
 
 // Builtin functions, these may be replaced by more
 // efficient implementations in the system
