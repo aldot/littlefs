@@ -19,7 +19,7 @@ tests/test.py << TEST
         size = strlen("kittycatcat");
         memcpy(buffer, "kittycatcat", size);
         for (int j = 0; j < $LARGESIZE; j++) {
-            lfs_file_write(&lfs, &file[0], buffer, size);
+            lfs_file_write(&lfs, &file[0], buffer, size) => size;
         }
 
         lfs_file_close(&lfs, &file[0]) => 0;

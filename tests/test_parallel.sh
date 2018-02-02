@@ -22,10 +22,10 @@ tests/test.py << TEST
         lfs_file_write(&lfs, &file[3], (const void*)"d", 1) => 1;
     }
 
-    lfs_file_close(&lfs, &file[0]);
-    lfs_file_close(&lfs, &file[1]);
-    lfs_file_close(&lfs, &file[2]);
-    lfs_file_close(&lfs, &file[3]);
+    lfs_file_close(&lfs, &file[0]) => 0;
+    lfs_file_close(&lfs, &file[1]) => 0;
+    lfs_file_close(&lfs, &file[2]) => 0;
+    lfs_file_close(&lfs, &file[3]) => 0;
 
     lfs_dir_open(&lfs, &dir[0], "/") => 0;
     lfs_dir_read(&lfs, &dir[0], &info) => 1;
@@ -69,11 +69,11 @@ tests/test.py << TEST
         buffer[0] => 'd';
     }
 
-    lfs_file_close(&lfs, &file[0]);
-    lfs_file_close(&lfs, &file[1]);
-    lfs_file_close(&lfs, &file[2]);
-    lfs_file_close(&lfs, &file[3]);
-    
+    lfs_file_close(&lfs, &file[0]) => 0;
+    lfs_file_close(&lfs, &file[1]) => 0;
+    lfs_file_close(&lfs, &file[2]) => 0;
+    lfs_file_close(&lfs, &file[3]) => 0;
+
     lfs_unmount(&lfs) => 0;
 TEST
 
@@ -95,7 +95,7 @@ tests/test.py << TEST
         lfs_file_write(&lfs, &file[0], (const void*)"e", 1) => 1;
     }
 
-    lfs_file_close(&lfs, &file[0]);
+    lfs_file_close(&lfs, &file[0]) => 0;
 
     lfs_dir_open(&lfs, &dir[0], "/") => 0;
     lfs_dir_read(&lfs, &dir[0], &info) => 1;
@@ -118,7 +118,7 @@ tests/test.py << TEST
         buffer[0] => 'e';
     }
 
-    lfs_file_close(&lfs, &file[0]);
+    lfs_file_close(&lfs, &file[0]) => 0;
     
     lfs_unmount(&lfs) => 0;
 TEST
@@ -144,9 +144,9 @@ tests/test.py << TEST
         lfs_file_write(&lfs, &file[2], (const void*)"g", 1) => 1;
     }
 
-    lfs_file_close(&lfs, &file[0]);
-    lfs_file_close(&lfs, &file[1]);
-    lfs_file_close(&lfs, &file[2]);
+    lfs_file_close(&lfs, &file[0]) => 0;
+    lfs_file_close(&lfs, &file[1]) => 0;
+    lfs_file_close(&lfs, &file[2]) => 0;
 
     lfs_dir_open(&lfs, &dir[0], "/") => 0;
     lfs_dir_read(&lfs, &dir[0], &info) => 1;
@@ -176,9 +176,9 @@ tests/test.py << TEST
         buffer[0] => 'g';
     }
 
-    lfs_file_close(&lfs, &file[0]);
-    lfs_file_close(&lfs, &file[1]);
-    
+    lfs_file_close(&lfs, &file[0]) => 0;
+    lfs_file_close(&lfs, &file[1]) => 0;
+
     lfs_unmount(&lfs) => 0;
 TEST
 

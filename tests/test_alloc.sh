@@ -117,7 +117,8 @@ lfs_remove singleprocreuse
 echo "--- Exhaustion test ---"
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("exhaustion");
     memcpy(buffer, "exhaustion", size);
     lfs_file_write(&lfs, &file[0], buffer, size) => size;
@@ -141,7 +142,7 @@ tests/test.py << TEST
 TEST
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_RDONLY);
+    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_RDONLY) => 0;
     size = strlen("exhaustion");
     lfs_file_size(&lfs, &file[0]) => size;
     lfs_file_read(&lfs, &file[0], buffer, size) => size;
@@ -155,7 +156,7 @@ tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_remove(&lfs, "exhaustion") => 0;
 
-    lfs_file_open(&lfs, &file[0], "padding", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "padding", LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("buffering");
     memcpy(buffer, "buffering", size);
     for (int i = 0; i < $SIZE; i++) {
@@ -164,7 +165,8 @@ tests/test.py << TEST
     lfs_file_close(&lfs, &file[0]) => 0;
     lfs_remove(&lfs, "padding") => 0;
 
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("exhaustion");
     memcpy(buffer, "exhaustion", size);
     lfs_file_write(&lfs, &file[0], buffer, size) => size;
@@ -188,7 +190,7 @@ tests/test.py << TEST
 TEST
 tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_RDONLY);
+    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_RDONLY) => 0;
     size = strlen("exhaustion");
     lfs_file_size(&lfs, &file[0]) => size;
     lfs_file_read(&lfs, &file[0], buffer, size) => size;
@@ -202,7 +204,8 @@ tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_remove(&lfs, "exhaustion") => 0;
 
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("blahblahblahblah");
     memcpy(buffer, "blahblahblahblah", size);
     for (lfs_size_t i = 0;
@@ -215,7 +218,8 @@ tests/test.py << TEST
     lfs_mkdir(&lfs, "exhaustiondir") => 0;
     lfs_remove(&lfs, "exhaustiondir") => 0;
 
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_APPEND);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_APPEND) => 0;
     size = strlen("blahblahblahblah");
     memcpy(buffer, "blahblahblahblah", size);
     for (lfs_size_t i = 0;
@@ -234,7 +238,8 @@ tests/test.py << TEST
     lfs_mount(&lfs, &cfg) => 0;
     lfs_remove(&lfs, "exhaustion") => 0;
 
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("blahblahblahblah");
     memcpy(buffer, "blahblahblahblah", size);
     for (lfs_size_t i = 0;
@@ -252,7 +257,8 @@ tests/test.py << TEST
     lfs_mkdir(&lfs, "exhaustiondir") => LFS_ERR_NOSPC;
 
     lfs_remove(&lfs, "exhaustion") => 0;
-    lfs_file_open(&lfs, &file[0], "exhaustion", LFS_O_WRONLY | LFS_O_CREAT);
+    lfs_file_open(&lfs, &file[0], "exhaustion",
+        LFS_O_WRONLY | LFS_O_CREAT) => 0;
     size = strlen("blahblahblahblah");
     memcpy(buffer, "blahblahblahblah", size);
     for (lfs_size_t i = 0;
