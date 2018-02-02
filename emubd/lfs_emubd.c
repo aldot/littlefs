@@ -182,34 +182,18 @@ int lfs_emubd_erase(const struct lfs_config *cfg, lfs_block_t block) {
     assert(block < cfg->block_count);
 
     // Erase the block
-    snprintf(emu->child, LFS_NAME_MAX, "%x", block);
-    struct stat st;
-    int err = stat(emu->path, &st);
-    if (err && errno != ENOENT) {
-        return -errno;
-    }
+    int err = snprintf(emu->child, LFS_NAME_MAX, "%x", block);
+    assert (err > 0 && err < LFS_NAME_MAX); /* truncated or other error */
 
-    if (!err && S_ISREG(st.st_mode) && (S_IWUSR & st.st_mode)) {
-        int err = unlink(emu->path);
-        if (err) {
-            return -errno;
-        }
-    }
-
-    if (err || (S_ISREG(st.st_mode) && (S_IWUSR & st.st_mode))) {
+    err = access(emu->path, F_OK|W_OK);
+    if (!err || errno == ENOENT || unlink(emu->path) == 0) {
         FILE *f = fopen(emu->path, "w");
-        if (!f) {
-            return -errno;
-        }
-
-        err = fclose(f);
-        if (err) {
-            return -errno;
-        }
+	if (f && fclose(f) == 0) {
+	    emu->stats.erase_count += 1;
+	    return 0;
+	}
     }
-
-    emu->stats.erase_count += 1;
-    return 0;
+    return -errno;
 }
 
 int lfs_emubd_sync(const struct lfs_config *cfg) {
