@@ -3,6 +3,7 @@ TARGET = lfs
 CC = gcc
 AR = ar
 SIZE = size
+RM = rm -f
 
 SRC += $(wildcard *.c emubd/*.c)
 OBJ := $(SRC:.c=.o)
@@ -48,6 +49,7 @@ $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
 
 %.a: $(OBJ)
+	$(RM) $@
 	$(AR) rcs $@ $^
 
 %.o: %.c
