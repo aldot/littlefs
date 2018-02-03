@@ -16,19 +16,20 @@ STARTSIZES="$1"
 HOTSIZES="$2"
 COLDSIZES="$3"
 tests/test.py << TEST
+    # define ARRAY_SIZE(x) ((unsigned)(sizeof(x) / sizeof((x)[0])))
     static const lfs_off_t startsizes[] = {$STARTSIZES};
     static const lfs_off_t hotsizes[]   = {$HOTSIZES};
 
     lfs_mount(&lfs, &cfg) => 0;
 
-    for (int i = 0; i < sizeof(startsizes)/sizeof(startsizes[0]); i++) {
+    for (unsigned int i = 0; i < ARRAY_SIZE(startsizes); i++) {
         sprintf((char*)buffer, "hairyhead%d", i);
         lfs_file_open(&lfs, &file[0], (const char*)buffer,
                 LFS_O_WRONLY | LFS_O_CREAT | LFS_O_TRUNC) => 0;
 
         strcpy((char*)buffer, "hair");
         size = strlen((char*)buffer);
-        for (int j = 0; j < startsizes[i]; j += size) {
+        for (unsigned int j = 0; j < startsizes[i]; j += size) {
             lfs_file_write(&lfs, &file[0], buffer, size) => size;
         }
         lfs_file_size(&lfs, &file[0]) => startsizes[i];
@@ -42,19 +43,20 @@ tests/test.py << TEST
     lfs_unmount(&lfs) => 0;
 TEST
 tests/test.py << TEST
+    # define ARRAY_SIZE(x) ((unsigned)(sizeof(x) / sizeof((x)[0])))
     static const lfs_off_t startsizes[] = {$STARTSIZES};
     static const lfs_off_t hotsizes[]   = {$HOTSIZES};
     static const lfs_off_t coldsizes[]  = {$COLDSIZES};
 
     lfs_mount(&lfs, &cfg) => 0;
 
-    for (int i = 0; i < sizeof(startsizes)/sizeof(startsizes[0]); i++) {
+    for (unsigned int i = 0; i < ARRAY_SIZE(startsizes); i++) {
         sprintf((char*)buffer, "hairyhead%d", i);
         lfs_file_open(&lfs, &file[0], (const char*)buffer, LFS_O_RDWR) => 0;
         lfs_file_size(&lfs, &file[0]) => hotsizes[i];
 
         size = strlen("hair");
-        int j = 0;
+        unsigned int j = 0;
         for (; j < startsizes[i] && j < hotsizes[i]; j += size) {
             lfs_file_read(&lfs, &file[0], buffer, size) => size;
             memcmp(buffer, "hair", size) => 0;
@@ -74,19 +76,20 @@ tests/test.py << TEST
     lfs_unmount(&lfs) => 0;
 TEST
 tests/test.py << TEST
+    # define ARRAY_SIZE(x) ((unsigned)(sizeof(x) / sizeof((x)[0])))
     static const lfs_off_t startsizes[] = {$STARTSIZES};
     static const lfs_off_t hotsizes[]   = {$HOTSIZES};
     static const lfs_off_t coldsizes[]  = {$COLDSIZES};
 
     lfs_mount(&lfs, &cfg) => 0;
 
-    for (int i = 0; i < sizeof(startsizes)/sizeof(startsizes[0]); i++) {
+    for (unsigned int i = 0; i < ARRAY_SIZE(startsizes); i++) {
         sprintf((char*)buffer, "hairyhead%d", i);
         lfs_file_open(&lfs, &file[0], (const char*)buffer, LFS_O_RDONLY) => 0;
         lfs_file_size(&lfs, &file[0]) => coldsizes[i];
 
         size = strlen("hair");
-        int j = 0;
+        unsigned int j = 0;
         for (; j < startsizes[i] && j < hotsizes[i] && j < coldsizes[i];
                 j += size) {
             lfs_file_read(&lfs, &file[0], buffer, size) => size;

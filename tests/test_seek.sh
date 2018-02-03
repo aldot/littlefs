@@ -301,7 +301,8 @@ tests/test.py << TEST
     size = strlen("hedgehoghog");
     const lfs_soff_t offsets[] = {512, 1020, 513, 1021, 511, 1019};
 
-    for (int i = 0; i < sizeof(offsets) / sizeof(offsets[0]); i++) {
+    # define ARRAY_SIZE(x) ((unsigned)(sizeof(x) / sizeof((x)[0])))
+    for (unsigned int i = 0; i < ARRAY_SIZE(offsets); i++) {
         lfs_soff_t off = offsets[i];
         memcpy(buffer, "hedgehoghog", size);
         lfs_file_seek(&lfs, &file[0], off, LFS_SEEK_SET) => off;
